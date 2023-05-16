@@ -61,14 +61,10 @@ void primes(int fd[2]){
             primes(fd_2);
         }else {
             close(fd_2[RD]);
-      wait(0);
+             wait(0);
         }
-    }else {
-        close(fd[RD]); // 关闭子进程的 读端
-        // 打印完毕  
-        wait(0);
     }
-
+    exit(0);
 }
 
 int main(int argc , char const* argv[]){
