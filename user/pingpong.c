@@ -11,7 +11,7 @@
 2 子进程应该打印“<pid>: received ping”，其中<pid>是进程ID，并在管道中写入字节发送给父进程，然后退出;
 3 父级应该从读取从子进程而来的字节，打印“<pid>: received pong”，然后退出。。
 */
-int main(int argc , const * argv[]){
+int main(int argc , char const * argv[]){
     char buf = 'p' ; //1 父进程应该向子进程发送一个字节;
     int fd_c2p[2];
     int fd_p2c[2];
