@@ -57,10 +57,11 @@ void primes(int fd[2]){
         // 转移 筛选
         transmit_data(fd , fd_2 , first);
         int pid =  fork();
-        if(pid < 0){
-            fprintf(2 , "fork error!\n");
-        }else if(pid == 0){
+         if(pid == 0){
             primes(fd_2);
+        }else {
+            close(fd_2[RD]);
+      wait(0);
         }
     }else {
         close(fd[RD]); // 关闭子进程的 读端
@@ -82,15 +83,12 @@ int main(int argc , char const* argv[]){
         if(pid == 0){//子进程 
             // 进行素数筛选 
             primes(fd);
-        }else if(pid > 0){
+        }else {
             // 父进程不需要读写
             close(fd[WR]);
             close(fd[RD]);
 
             wait(0);//参数是时间  子进程结束立即返回
-        }else {
-            fprintf(2 ,"fork error!\n");
-            exit(1);
         }
     }
      exit(0);
