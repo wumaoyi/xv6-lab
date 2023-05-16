@@ -199,7 +199,7 @@ UPROGS=\
 
 
 ifeq ($(LAB),$(filter $(LAB), pgtbl lock))
-UPROGS += \
+UPROGS  += \
 	$U/_stats
 endif
 
