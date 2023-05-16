@@ -61,7 +61,7 @@ void primes(int fd[2]){
             primes(fd_2);
         }else {
             close(fd_2[RD]);
-             wait(0);
+            wait(0);
         }
     }
     exit(0);
@@ -74,7 +74,7 @@ int main(int argc , char const* argv[]){
     //写入 2 - 35 的数到文件里 然后进行筛选
     for(int i = 2  ; i <= 35 ; ++i ){
         write(fd[WR] , &i , INT_LEN);
-
+    }
         int pid = fork();
         if(pid == 0){//子进程 
             // 进行素数筛选 
@@ -86,6 +86,5 @@ int main(int argc , char const* argv[]){
 
             wait(0);//参数是时间  子进程结束立即返回
         }
-    }
      exit(0);
 }
