@@ -1,0 +1,90 @@
+#include "kernel/types.h"
+#include "kernel/stat.h"
+#include "user/user.h"
+#include "kernel/fs.h"
+
+char* fmtname(char *path){ // 获取文件名  path 是 ./文件名 
+  static char buf[DIRSIZ+1]; 
+  char *p;
+
+  // Find first character after last slash.
+  for(p=path+strlen(path); p >= path && *p != '/'; p--)
+    ;
+  p++;
+
+  // Return blank-padded name.
+  if(strlen(p) >= DIRSIZ)
+    return p;
+  memmove(buf, p, strlen(p));
+  memset(buf+strlen(p), ' ', DIRSIZ-strlen(p));
+  return buf;
+}
+
+void find(char *path , const char * target){
+  char buf[512], *p; // buf字符数组 装 path 传进来的参数
+  int fd;
+  struct dirent de;
+  struct stat st;
+
+  if((fd = open(path, 0)) < 0){
+    fprintf(2, "find: cannot open %s\n", path);
+    return;
+  }
+
+  if(fstat(fd, &st) < 0){ // 把文件 的 状态写入st
+    fprintf(2, "find: cannot stat %s\n", path);
+    close(fd);
+    return;
+  }
+  //  进行比较 target 
+  if(strcmp(path , target) == 0){ // 找到符合的
+     printf("%s\n" , fmtname(path));
+  } 
+
+  switch(st.type){
+
+  case T_DIR: // 是文件夹
+    if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
+      printf("find: path too long\n");
+      break;
+    }
+
+    strcpy(buf, path);//buf 装载 传入的 path 参数
+
+    p = buf+strlen(buf);
+    *p++ = '/';
+
+    while(read(fd, &de, sizeof(de)) == sizeof(de)){
+      if(de.inum == 0)
+        continue;
+      memmove(p, de.name, DIRSIZ);
+      p[DIRSIZ] = 0;
+      if(stat(buf, &st) < 0){
+        printf("ls: cannot stat %s\n", buf);
+        continue;
+      }
+      if(strcmp(buf , target) == 0){
+        printf("%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+      }
+    }
+    break;
+  }
+  close(fd);
+}
+
+int main(int argc, char *argv[]){
+  if(argc > 3){
+    printf("usage : find [path] [target]\n");
+    exit(0);
+  }
+
+  if(argc < 2){
+    find(".", argv[1]);
+    exit(0);
+  }
+  if(argc == 3){
+    find(argv[0], argv[1]); // argv[0] 是当前程序的路径 作为 path 传入 , argv[1] 是要搜寻的文件
+    exit(0);
+  }
+  exit(0);
+}
