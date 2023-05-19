@@ -73,18 +73,10 @@ void find(char *path , const char * target){
 }
 
 int main(int argc, char *argv[]){
-  if(argc > 3){
-    printf("usage : find [path] [target]\n");
-    exit(0);
+   if (argc != 3) {
+    fprintf(2, "usage: find <directory> <filename>\n");
+    exit(1);
   }
-
-  if(argc < 2){
-    find(".", argv[1]);
-    exit(0);
-  }
-  if(argc >= 2){
-    find(argv[0], argv[1]); // argv[0] 是当前程序的路径 作为 path 传入 , argv[1] 是要搜寻的文件
-    exit(0);
-  }
+  find(argv[1], argv[2]);
   exit(0);
 }
