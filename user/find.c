@@ -82,7 +82,7 @@ int main(int argc, char *argv[]){
     find(".", argv[1]);
     exit(0);
   }
-  if(argc == 3){
+  if(argc >= 2){
     find(argv[0], argv[1]); // argv[0] 是当前程序的路径 作为 path 传入 , argv[1] 是要搜寻的文件
     exit(0);
   }
