@@ -40,10 +40,10 @@ ls(char *path)
     close(fd); 
     return;
   }
-  printf("%s" , path);
+  printf("%s %d\n" , path , st.type);
   switch(st.type){
   case T_FILE:
-    printf("%s  %d %d %l\n", fmtname(path) ,st.type, st.ino, st.size);
+    printf("%s %d %d %l\n", fmtname(path) ,st.type, st.ino, st.size);
     break;
 
   case T_DIR:
