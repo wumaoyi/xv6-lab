@@ -50,7 +50,7 @@ void find(char *path , const char * target){
   }
   //  进行比较 target 
   if(strcmp(fmtname(path) , target) == 0){ // 找到符合的
-     printf("%s\n" , fmtname(path));
+     printf("%s\n" , path);
   } 
 
   switch(st.type){
