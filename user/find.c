@@ -75,7 +75,7 @@ void find(char *path , const char * target){
         printf("ls: cannot stat %s\n", buf);
         continue;
       }
-      if(norecurse(buf) == 0 ){
+      if(norecurse(buf) ){
         find(buf , target);
       }
     }
