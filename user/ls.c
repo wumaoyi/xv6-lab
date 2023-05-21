@@ -37,13 +37,13 @@ ls(char *path)
 
   if(fstat(fd, &st) < 0){
     fprintf(2, "ls: cannot stat %s\n", path);
-    close(fd);
+    close(fd); 
     return;
   }
 
   switch(st.type){
   case T_FILE:
-    printf("%s %d %d %l\n", fmtname(path), st.type, st.ino, st.size);
+    printf("%s %s %d %d %l\n", fmtname(path), path ,st.type, st.ino, st.size);
     break;
 
   case T_DIR:
