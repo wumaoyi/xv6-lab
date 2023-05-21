@@ -20,6 +20,7 @@ char* fmtname(char *path){ // 获取文件名  path 是 ./文件名
   return buf;
 }
 
+
 void find(char *path , const char * target){
   char buf[512], *p; // buf字符数组 装 path 传进来的参数
   int fd;
@@ -63,7 +64,7 @@ void find(char *path , const char * target){
         printf("ls: cannot stat %s\n", buf);
         continue;
       }
-      if(strcmp(fmtname(path) , target) == 0){
+      if(strcmp(fmtname(buf) , target) == 0){
         printf("%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
       }
     }
