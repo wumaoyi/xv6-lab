@@ -101,6 +101,5 @@ int main(int argc, char *argv[]){
     fprintf(2, "usage: find <directory> <filename>\n");
     exit(1);
   }
-  find(argv[1], argv[2]);
   exit(0);
 }
