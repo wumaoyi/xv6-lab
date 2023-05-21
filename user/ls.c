@@ -54,7 +54,7 @@ ls(char *path)
     strcpy(buf, path);
     p = buf+strlen(buf);
     *p++ = '/';
-    printf("%s\n" ,p );
+    //printf("%s\n" ,p );
     while(read(fd, &de, sizeof(de)) == sizeof(de)){// 读出文件夹的内容刚给 struct de
       if(de.inum == 0)
         continue;
@@ -64,7 +64,7 @@ ls(char *path)
         printf("ls: cannot stat %s\n", buf);
         continue;
       }
-      printf("%s\n" ,p );
+      //printf("%s\n" ,p );
       printf("%s %d %d %d\n", fmtname(buf) , st.type, st.ino, st.size);
     }
     break;
