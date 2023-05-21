@@ -20,6 +20,17 @@ char* fmtname(char *path){ // 获取文件名  path 是 ./文件名
   return buf;
 }
 
+//是否能递归 是文件夹则可以递归
+int norecurse(char* path){//. 和 ..不递归
+    char* buf = fmtname(path);
+    if(buf[0] == '.' && buf[1] == 0){
+      return 0 ; //不能递归
+    }
+    if(buf[0] == '.' && buf[1] == '.'&& buf[2]==0){
+      return 0 ; //不能递归
+    }
+    return 1 ;
+}
 
 void find(char *path , const char * target){
   char buf[512], *p; // buf字符数组 装 path 传进来的参数
@@ -64,8 +75,8 @@ void find(char *path , const char * target){
         printf("ls: cannot stat %s\n", buf);
         continue;
       }
-      if(strcmp(fmtname(buf) , target) == 0){
-        printf("%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+      if(norecurse(buf) == 0 ){
+        find(buf , target);
       }
     }
     break;
