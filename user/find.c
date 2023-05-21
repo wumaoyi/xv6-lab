@@ -4,7 +4,7 @@
 #include "kernel/fs.h"
 
 char* fmtname(char *path){ // 获取文件名  path 是 ./文件名 
-  static char buf[DIRSIZ+1]; 
+  static char buf[DIRSIZ+1]; // 存放
   char *p;
 
   // Find first character after last slash.
@@ -16,7 +16,7 @@ char* fmtname(char *path){ // 获取文件名  path 是 ./文件名
   if(strlen(p) >= DIRSIZ)
     return p;
   memmove(buf, p, strlen(p));
-  memset(buf+strlen(p), ' ', DIRSIZ-strlen(p));
+  memset(buf+strlen(p), 0, DIRSIZ-strlen(p));// 设置 0 是结束符
   return buf;
 }
 
@@ -37,7 +37,7 @@ void find(char *path , const char * target){
     return;
   }
   //  进行比较 target 
-  if(strcmp(path , target) == 0){ // 找到符合的
+  if(strcmp(fmtname(path) , target) == 0){ // 找到符合的
      printf("%s\n" , fmtname(path));
   } 
 
@@ -63,7 +63,7 @@ void find(char *path , const char * target){
         printf("ls: cannot stat %s\n", buf);
         continue;
       }
-      if(strcmp(buf , target) == 0){
+      if(strcmp(fmtname(path) , target) == 0){
         printf("%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
       }
     }
@@ -73,7 +73,19 @@ void find(char *path , const char * target){
 }
 
 int main(int argc, char *argv[]){
-   if (argc != 3) {
+  if(argc == 1){
+    fprintf(2, "usage: find <directory> <filename>\n");
+    exit(1);
+  }
+  if(argc == 2){
+    find(".",argv[1]);
+    exit(0);
+  } 
+  if(argc == 3){
+    find(argv[0],argv[1]);
+    exit(0);
+  } 
+  if(argc > 3) {
     fprintf(2, "usage: find <directory> <filename>\n");
     exit(1);
   }
