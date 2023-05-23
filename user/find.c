@@ -53,7 +53,7 @@ void find(char *path , const char * target){
      printf("%s\n" , path);
   } 
 
-  switch(st.type){
+  switch(st.type ){
 
   case T_DIR: // 是文件夹
     if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
