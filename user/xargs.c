@@ -28,8 +28,8 @@ int main(int argc , char*argv[]){
     printf("1");
     char buf[MSG_SIZE];// 接收前面一个命令的标准输出 字符数组
 
-    read(0 , buf ,MSG_SIZE);//shell确保始终打开三个文件描述符（012），这三个描述符在默认情况下是控制台的文件描述符
-
+    int a = read(0 , buf ,MSG_SIZE);//shell确保始终打开三个文件描述符（012），这三个描述符在默认情况下是控制台的文件描述符
+    printf("%d",a);
     // q2 如何获取到自己的命令行参数 通过 argv 获取
     char* xargv[MAXARG]; //储存 argv 中自己的参数 字符串数组
     int xargc = 0;
