@@ -33,8 +33,8 @@ int main(int argc , char*argv[]){
     // q2 如何获取到自己的命令行参数 通过 argv 获取
     char* xargv[MAXARG]; //储存 argv 中自己的参数 字符串数组
     int xargc = 0;
-    for(int i = 0 ; i  < argc ; ++i){
-        xargv[xargc] = argv[i];
+    for(int i = 1 ; i  < argc ; ++i){
+        xargv[xargc] = argv[i];//写入参数的时候 从第二个开始 因为第一个是 xargs
         ++xargc; 
     }
     
@@ -48,7 +48,7 @@ int main(int argc , char*argv[]){
                 wait(0); // 等待子进程返回 
                 q = &buf[ i + 1 ];
             }else{
-                buf[i] = 0;
+                //buf[i] = 0;
                 xargv[xargc] = q;//xargv[i] 表示的是一个 字符串的地址 即 char*
                 ++xargc;
                 xargv[xargc] = 0; // 后加入参数后 0 作为结束符
@@ -58,6 +58,6 @@ int main(int argc , char*argv[]){
             }
         }
     }
-    wait(0);
+   // wait(0);
     exit(0);
 }
