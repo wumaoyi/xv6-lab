@@ -24,7 +24,7 @@ int main(int argc , char*argv[]){
     // echo hello too | xargs echo bye
     // q1 怎么获取前面一个命令的标准化输出  通过文件描述符号 0：输入  1：输出  进行读取
 
-    sleep(5); // 防止前面 程序执行太慢 导致前面的输出没有
+    sleep(10); // 防止前面 程序执行太慢 导致前面的输出没有
     
     char buf[MSG_SIZE];// 接收前面一个命令的标准输出 字符数组
 
@@ -48,7 +48,7 @@ int main(int argc , char*argv[]){
                 wait(0); // 等待子进程返回 
                 q = &buf[ i + 1 ];
             }else{
-                //buf[i] = 0;
+                buf[i] = 0;
                 xargv[xargc] = q;//xargv[i] 表示的是一个 字符串的地址 即 char*
                 ++xargc;
                 xargv[xargc] = 0; // 后加入参数后 0 作为结束符
