@@ -43,7 +43,7 @@ int main(int argc , char*argv[]){
     // q3 如何使用exec去执行命令
     for (int i = 0; i < MSG_SIZE; i++){
         printf("9");
-        if(buf[i] == '\n' || buf[i] == '\0'){ // 则换行 调用fork 执行 exec 
+        if(buf[i] == '\n' ){ // 则换行 调用fork 执行 exec 
             int pid = fork();
             printf("131");
             if(pid > 0){ //父进程
