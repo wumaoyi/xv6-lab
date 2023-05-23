@@ -54,10 +54,10 @@ int main(int argc , char*argv[]){
                 xargv[xargc] = 0; // 后加入参数后 0 作为结束符
                 ++xargc;
                 exec(xargv[0],xargv);// xargv[0] 第一个参数代表 xargs 后面的程序文件
-                exit(1);
+                exit(0);
             }
         }
     }
-    //wait(0);
+    wait(0);
     exit(0);
 }
