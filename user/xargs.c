@@ -20,7 +20,7 @@
 4  将程序添加到Makefile中的UPROGS。
 5  对文件系统的更改会在qemu的运行过程中保持不变；要获得一个干净的文件系统，请运行make clean，然后make qemu
 */
-int main(int argc , char*argv){
+int main(int argc , char*argv[]){
     // echo hello too | xargs echo bye
     // q1 怎么获取前面一个命令的标准化输出  通过文件描述符号 0：输入  1：输出  进行读取
 
@@ -38,7 +38,7 @@ int main(int argc , char*argv){
         ++xargc; 
     }
     
-    char* q = &buf; // 定义一个指针指向 字符数组的第一个字符地址
+    char* q = buf; // 定义一个指针指向 字符数组的第一个字符地址
     
     // q3 如何使用exec去执行命令
     for (int i = 0; i < MSG_SIZE; i++){
