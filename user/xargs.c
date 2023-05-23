@@ -23,13 +23,11 @@
 int main(int argc , char*argv[]){
     // echo hello too | xargs echo bye
     // q1 怎么获取前面一个命令的标准化输出  通过文件描述符号 0：输入  1：输出  进行读取
-    printf("000");
     sleep(20); // 防止前面 程序执行太慢 导致前面的输出没有
-    printf("1");
     char buf[MSG_SIZE];// 接收前面一个命令的标准输出 字符数组
 
     int a = read(0 , buf ,MSG_SIZE);//shell确保始终打开三个文件描述符（012），这三个描述符在默认情况下是控制台的文件描述符
-    printf("%d",a);
+    printf("%d\n",a);
     // q2 如何获取到自己的命令行参数 通过 argv 获取
     char* xargv[MAXARG]; //储存 argv 中自己的参数 字符串数组
     int xargc = 0;
@@ -42,8 +40,8 @@ int main(int argc , char*argv[]){
     
     // q3 如何使用exec去执行命令
     for (int i = 0; i < MSG_SIZE; i++){
-        printf("999");
-        if(buf[i] == '\n'){ // 则换行 调用fork 执行 exec 
+        //printf("9");
+        if(buf[i] == '\n' || buf[i] == '\0'){ // 则换行 调用fork 执行 exec 
             int pid = fork();
             printf("131");
             if(pid > 0){ //父进程
