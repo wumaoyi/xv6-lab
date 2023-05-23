@@ -23,9 +23,9 @@
 int main(int argc , char*argv[]){
     // echo hello too | xargs echo bye
     // q1 怎么获取前面一个命令的标准化输出  通过文件描述符号 0：输入  1：输出  进行读取
-
+    printf("000");
     sleep(20); // 防止前面 程序执行太慢 导致前面的输出没有
-    
+    printf("1");
     char buf[MSG_SIZE];// 接收前面一个命令的标准输出 字符数组
 
     read(0 , buf ,MSG_SIZE);//shell确保始终打开三个文件描述符（012），这三个描述符在默认情况下是控制台的文件描述符
