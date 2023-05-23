@@ -58,6 +58,6 @@ int main(int argc , char*argv[]){
             }
         }
     }
-    //wait(0);
+    wait(0);
     exit(0);
 }
