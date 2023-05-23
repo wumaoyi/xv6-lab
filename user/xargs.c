@@ -53,6 +53,7 @@ int main(int argc , char*argv[]){
                 ++xargc;
                 xargv[xargc] = 0; // 后加入参数后 0 作为结束符
                 ++xargc;
+                printf("111");
                 exec(xargv[0],xargv);// xargv[0] 第一个参数代表 xargs 后面的程序文件
                 exit(0);
             }
