@@ -44,8 +44,11 @@ int main(int argc , char*argv[]){
     for (int i = 0; i < MSG_SIZE; i++){
         if(buf[i] == '\n'){ // 则换行 调用fork 执行 exec 
             int pid = fork();
+            printf("131");
             if(pid > 0){ //父进程
+                printf("111");
                 wait(0); // 等待子进程返回 
+                printf("222");
                 q = &buf[ i + 1 ];
             }else{
                 buf[i] = 0;
