@@ -45,8 +45,8 @@ int main(int argc , char*argv[]){
         if(buf[i] == '\n'){ // 则换行 调用fork 执行 exec 
             int pid = fork();
             if(pid > 0){ //父进程
-                q = &buf[ i + 1 ];
                 wait(0); // 等待子进程返回 
+                q = &buf[ i + 1 ];
             }else{
                 buf[i] = 0;
                 xargv[xargc] = q;//xargv[i] 表示的是一个 字符串的地址 即 char*
