@@ -48,7 +48,7 @@ int main(int argc , char*argv[]){
                 wait(0); // 等待子进程返回 
                 q = &buf[ i + 1 ];
             }else{
-                //buf[i] = 0;
+                buf[i] = 0;
                 xargv[xargc] = q;//xargv[i] 表示的是一个 字符串的地址 即 char*
                 ++xargc;
                 xargv[xargc] = 0; // 后加入参数后 0 作为结束符
