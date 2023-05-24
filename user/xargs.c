@@ -28,8 +28,8 @@ int main(int argc , char*argv[]){
 
     char buf[MSG_SIZE];// 接收前面一个命令的标准输出 字符数组
 
-    int a = read(0 , buf ,MSG_SIZE );//shell确保始终打开三个文件描述符（012），这三个描述符在默认情况下是控制台的文件描述符
-    printf("%d\n",a);
+     read(0 , buf ,MSG_SIZE );//shell确保始终打开三个文件描述符（012），这三个描述符在默认情况下是控制台的文件描述符
+    //printf("%d\n",a);
     // q2 如何获取到自己的命令行参数 通过 argv 获取
     char* xargv[MAXARG]; //储存 argv 中自己的参数 字符串数组
     int xargc = 0;
@@ -45,11 +45,11 @@ int main(int argc , char*argv[]){
         printf("1\n");
         if(buf[i] == '\n' ){ // 则换行 调用fork 执行 exec 
             int pid = fork();
-            printf("9\n");
+            //printf("9\n");
             if(pid > 0){ //父进程
                 printf("2\n");
                 wait(0); // 等待子进程返回 
-                printf("3\n");
+                //printf("3\n");
                 q = &buf[ i + 1 ];
             }else{
                 buf[i] = 0;
@@ -57,7 +57,7 @@ int main(int argc , char*argv[]){
                 ++xargc;
                 xargv[xargc] = 0; // 后加入参数后 0 作为结束符
                 ++xargc;
-                printf("4\n");
+                //printf("4\n");
                 exec(xargv[0],xargv);// xargv[0] 第一个参数代表 xargs 后面的程序文件
                 exit(0);
             }
