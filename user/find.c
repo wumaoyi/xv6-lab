@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
   } 
   if(argc == 3){
     printf("ok\n");
-    find(argv[0],argv[1]);
+    find(argv[1],argv[2]);
     exit(0);
   } 
   if(argc > 3) {
