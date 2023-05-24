@@ -45,7 +45,7 @@ int main(int argc , char*argv[]){
         printf("1\n");
         if(buf[i] == '\n' ){ // 则换行 调用fork 执行 exec 
             int pid = fork();
-
+            printf("9\n");
             if(pid > 0){ //父进程
                 printf("2\n");
                 wait(0); // 等待子进程返回 
