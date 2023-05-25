@@ -14,7 +14,7 @@ main(int argc, char *argv[])
     exit(1);
   }
 
-  if (trace(atoi(argv[1])) < 0) {
+  if (trace(atoi(argv[1])) < 0) {// trace 这里是系统调用 需要自己写在内核里面
     fprintf(2, "%s: trace failed\n", argv[0]);
     exit(1);
   }
