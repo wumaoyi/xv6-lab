@@ -6,6 +6,10 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h"
+
+uint64 acquire_freemen();
+uint64 accquire_nproc();
 
 uint64
 sys_exit(void)
@@ -113,5 +117,22 @@ uint64 sys_trace(void){
     return -1;
   struct proc* p = myproc();
   p->trace_mask = mask;
+  return 0;
+}
+
+uint64 sys_sysinfo(void){
+  struct sysinfo info;
+
+  struct proc*  p = myproc();
+
+  uint64 addr;//指向 info 的地址
+
+  info.freemem = acquire_freemen();//空闲字节数
+  info.nproc =  accquire_nproc();//使用的进程数量
+  if(argaddr(0, &addr) < 0)//获取第一个参数 写入&st
+    return -1;
+
+  if(copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)//将 进程 p 的 info 信息复制给 addr
+      return -1;
   return 0;
 }
