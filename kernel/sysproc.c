@@ -95,3 +95,23 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+/*uint64
+sys_exit(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+  exit(n);
+  return 0;  // not reached
+}
+*/
+uint64 sys_trace(void){
+  int mask;//参考上面 n 是接收用户态 传入的参数 掩码：指要追踪的系统调用
+  if(argint(0, &mask) < 0)// 将参数 存到 proc 进程结构体中 从a0寄存器中取出  第一个参数赋值给mask 
+    return -1;
+  struct proc* p = myproc();
+  p->trace_mask = mask;
+  return 0;
+}
