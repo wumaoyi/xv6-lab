@@ -70,6 +70,7 @@ sys_sleep(void)
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
+  backtrace();
   return 0;
 }
 
@@ -94,4 +95,33 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+uint64
+sys_sigalarm(void)
+{
+  int ticks;
+  uint64 handler;
+  argint(0,&ticks);
+
+  argaddr(1,&handler);
+  struct proc *p = myproc();
+  p->ticks = ticks;
+  p->handler = handler;
+  p->ticks_cn = 0;//经过了多少时钟周期 
+  return 0;
+}
+
+uint64
+sys_sigreturn(void)
+{
+  struct proc *p = myproc();
+  //p->trapframe ->epc = p->ticks_epc;
+  /*p->trapframe ->epc = p->ticks_epc;
+     存在的问题  handler可能也有函数调用 跳转到 trap 
+     更改trapframe的值 ， 得保存 跳入 handle 前 trapframe 的值
+  */
+ memmove(p->trapframe, p->alarm_trapframe, sizeof(struct trapframe));
+ p->isalarm = 1;
+ return 0;
 }

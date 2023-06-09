@@ -122,6 +122,7 @@ panic(char *s)
   printf(s);
   printf("\n");
   panicked = 1; // freeze uart output from other CPUs
+  backtrace();
   for(;;)
     ;
 }
@@ -131,4 +132,20 @@ printfinit(void)
 {
   initlock(&pr.lock, "pr");
   pr.locking = 1;
+}
+
+void backtrace(){
+  printf("bracktace:\n");
+  uint64 fp = r_fp();//获取函数的栈帧（bracktrace）
+  // return address 和 指向前一个strack Frame 的指针 分别 是 fp 地址偏移-8字节 和 -16字节
+  uint64 *frame = (uint64*)fp;
+  //XV6在内核中以页面对齐的地址为每个栈分配一个页面。
+  //你可以通过PGROUNDDOWN(fp)和PGROUNDUP(fp)（参见kernel/riscv.h）来计算栈页面的顶部和底部地址
+  uint64 up = PGROUNDUP(fp);
+  uint64 down = PGROUNDDOWN(fp);
+  while(fp > down && fp < up){ // fp 指向在 栈页面 范围内 合法
+    printf("%p\n",frame[-1]);//返回地址
+    fp = frame[-2]; //将上一个栈帧 的指针 赋值给 fp 进入循环
+    frame = (uint64*)fp; // frame 也要跟着更新
+  }
 }
