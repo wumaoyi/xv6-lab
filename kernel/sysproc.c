@@ -47,8 +47,18 @@ sys_sbrk(void)
   if(argint(0, &n) < 0)
     return -1;
   addr = myproc()->sz;
-  if(growproc(n) < 0)
-    return -1;
+  //if(growproc(n) < 0)
+  //   return -1;
+  uint64 sz = myproc()->sz;
+ // if(n > 0){
+    sz += n;//先不调用growproc 分配空间 先增加sz大小 调用内存的时候分配 
+  //}
+  // else if(sz + n > 0) {
+  //   sz = uvmdealloc(myproc()->pagetable, sz, sz + n);
+  //   sz = sz;
+  // } else {
+  //   return -1;
+  // }
   return addr;
 }
 
