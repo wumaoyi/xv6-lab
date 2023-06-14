@@ -303,7 +303,6 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
   pte_t *pte;
   uint64 pa, i;
   uint flags;
-  char *mem;
 
   for(i = 0; i < sz; i += PGSIZE){
     if((pte = walk(old, i, 0)) == 0)
@@ -311,14 +310,21 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
     if((*pte & PTE_V) == 0)
       panic("uvmcopy: page not present");
     pa = PTE2PA(*pte);
+
+    *pte = *pte & ~(PTE_W);    //清除pte写权限
+    *pte = *pte | PTE_COW;
+
     flags = PTE_FLAGS(*pte);
-    if((mem = kalloc()) == 0)
-      goto err;
-    memmove(mem, (char*)pa, PGSIZE);
-    if(mappages(new, i, PGSIZE, (uint64)mem, flags) != 0){
-      kfree(mem);
+    // if((mem = kalloc()) == 0)
+    //   goto err;
+    // memmove(mem, (char*)pa, PGSIZE);
+    
+    if(mappages(new, i, PGSIZE, (uint64)pa, flags) != 0){//mappages(new, i, PGSIZE, (uint64)mem, flags 
+      // 直接映射 pa 
+      //kfree(mem);
       goto err;
     }
+    incr((void*)pa);
   }
   return 0;
 
@@ -350,6 +356,11 @@ copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
 
   while(len > 0){
     va0 = PGROUNDDOWN(dstva);
+    if(is_cow_fault(pagetable,va0)){
+      if(cow_alloc(pagetable,va0)){
+        return -1;
+      }
+    }
     pa0 = walkaddr(pagetable, va0);
     if(pa0 == 0)
       return -1;
@@ -431,4 +442,47 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
   } else {
     return -1;
   }
+}
+
+
+int is_cow_fault(pagetable_t pagetable ,uint64 va){
+    if(va >= MAXVA) {
+      return 0;
+    }
+    va = PGROUNDDOWN(va);
+    pte_t *pte = walk(pagetable,va,0);
+    if(pte == 0)
+      return 0;
+    if((*pte & PTE_V) == 0)
+      return 0;
+    if((*pte & PTE_U) == 0)
+     return 0;
+    if(*pte & PTE_COW){
+      return 1;
+    }
+    return 0;
+}
+                
+int cow_alloc(pagetable_t pagetable ,uint64 va) {
+    va = PGROUNDDOWN(va);
+
+    pte_t *pte = walk(pagetable,va,0); //得到最低一级 页条目
+    
+    uint64 pa = PTE2PA(*pte); // 获取物理地址
+    int flag = PTE_FLAGS(*pte); // 获取标志位
+
+    char*mem = kalloc();
+    if(mem == 0){ //分配失败
+      return -1;
+    }
+    memmove(mem,  (char*)pa  , PGSIZE);
+    uvmunmap(pagetable , va , 1 , 1); // 解除映射
+    
+    flag &= ~(PTE_COW); 
+    flag |= PTE_W;
+    if(mappages(pagetable , va , PGSIZE , (uint64)mem, flag ) < 0){
+      kfree(mem);//不恰当的释放 可能其他进程还在使用mem 应该使用引用计数的方法
+      return -1;
+    }
+    return 0;
 }
