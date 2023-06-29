@@ -131,7 +131,7 @@ bget(uint dev, uint blockno)
     if(!holding(&bcache.buckets[i].lock))acquire(&bcache.buckets[i].lock);
     
     //循环找最小
-    for(tmp = bcache.buckets[i].head.next ; tmp != bcache.buckets[i].head ; tmp = tmp->next){
+    for(tmp = bcache.buckets[i].head.next ; tmp != &bcache.buckets[i].head ; tmp = tmp->next){
       //使用时间戳LRU算法 而不是根据节点在链表中的位置 遍历一遍 取可用的 切 b->timestamp最小的
       if(tmp->refcnt == 0 && (b == 0 || tmp ->timestamp )) b = tmp;
     }
@@ -158,7 +158,7 @@ bget(uint dev, uint blockno)
       //记录时间戳
       acquire(&tickslock);
       b->timestamp = ticks;
-      
+
       release(&tickslock);
       acquiresleep(&b->lock);
       release(&bcache.buckets[bid].lock);
