@@ -127,8 +127,14 @@ bget(uint dev, uint blockno)
   for(int i = bid , cycle  = 0 ; cycle != NBUCKET ; i = (i+1)%NBUCKET){
     ++cycle;
     // 如果遍历到当前桶 前面已经 申请过锁了 就跳过
-    if(i == bid) continue;
-    if(!holding(&bcache.buckets[i].lock))acquire(&bcache.buckets[i].lock);
+    // if(i == bid) continue; bug
+    // if(!holding(&bcache.buckets[i].lock))acquire(&bcache.buckets[i].lock);
+    if(i != bid) {
+      if(!holding(&bcache.buckets[i].lock))
+        acquire(&bcache.buckets[i].lock);
+      else
+        continue;
+    }
     
     //循环找最小
     for(tmp = bcache.buckets[i].head.next ; tmp != &bcache.buckets[i].head ; tmp = tmp->next){
@@ -158,8 +164,8 @@ bget(uint dev, uint blockno)
       //记录时间戳
       acquire(&tickslock);
       b->timestamp = ticks;
-
       release(&tickslock);
+
       acquiresleep(&b->lock);
       release(&bcache.buckets[bid].lock);
 
