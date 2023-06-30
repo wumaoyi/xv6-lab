@@ -7,6 +7,7 @@
 int
 main()
 {
+  printf("bigfile!!!!!\n");
   char buf[BSIZE];
   int fd, i, blocks;
 
