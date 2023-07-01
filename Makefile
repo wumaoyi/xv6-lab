@@ -30,8 +30,7 @@ OBJS = \
   $K/sysfile.o \
   $K/kernelvec.o \
   $K/plic.o \
-  $K/virtio_disk.o\
-  $K/sprintf.o
+  $K/virtio_disk.o
 
 OBJS_KCSAN = \
   $K/start.o \
@@ -45,7 +44,7 @@ OBJS_KCSAN += \
 	$K/kcsan.o
 endif
 
-ifeq ($(LAB),$(filter $(LAB), lock))
+ifeq ($(LAB),$(filter $(LAB), fs))
 OBJS += \
 	$K/stats.o\
 	$K/sprintf.o
@@ -142,7 +141,7 @@ tags: $(OBJS) _init
 
 ULIB = $U/ulib.o $U/usys.o $U/printf.o $U/umalloc.o
 
-ifeq ($(LAB),$(filter $(LAB), lock))
+ifeq ($(LAB),$(filter $(LAB), fs))
 ULIB += $U/statistics.o
 endif
 
@@ -240,13 +239,11 @@ endif
 ifeq ($(LAB),fs)
 UPROGS += \
 	$U/_kalloctest\
-	$U/_bcachetest
-endif
-
-ifeq ($(LAB),fs)
-UPROGS += \
+	$U/_bcachetest\
 	$U/_bigfile
 endif
+
+
 
 
 
