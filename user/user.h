@@ -24,6 +24,7 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int symlink(const char*, const char*);
 #ifdef LAB_NET
 int connect(uint32, uint16, uint16);
 #endif

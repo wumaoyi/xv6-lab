@@ -4,6 +4,7 @@
 
 #define ROOTINO  1   // root i-number
 #define BSIZE 1024  // block size
+#define MAX_SYMLINK_DEPTH 10
 
 // Disk layout:
 // [ boot block | super block | log | inode blocks |

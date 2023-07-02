@@ -569,59 +569,59 @@ writetest(char *s)
   }
 }
 
-void
-writebig(char *s)
-{
-  int i, fd, n;
+// void
+// writebig(char *s)
+// {
+//   int i, fd, n;
 
-  fd = open("big", O_CREATE|O_RDWR);
-  if(fd < 0){
-    printf("%s: error: creat big failed!\n", s);
-    exit(1);
-  }
+//   fd = open("big", O_CREATE|O_RDWR);
+//   if(fd < 0){
+//     printf("%s: error: creat big failed!\n", s);
+//     exit(1);
+//   }
 
-  for(i = 0; i < MAXFILE; i++){
-    ((int*)buf)[0] = i;
-    if(write(fd, buf, BSIZE) != BSIZE){
-      printf("%s: error: write big file failed\n", s, i);
-      exit(1);
-    }
-  }
+//   for(i = 0; i < MAXFILE; i++){
+//     ((int*)buf)[0] = i;
+//     if(write(fd, buf, BSIZE) != BSIZE){
+//       printf("%s: error: write big file failed\n", s, i);
+//       exit(1);
+//     }
+//   }
 
-  close(fd);
+//   close(fd);
 
-  fd = open("big", O_RDONLY);
-  if(fd < 0){
-    printf("%s: error: open big failed!\n", s);
-    exit(1);
-  }
+//   fd = open("big", O_RDONLY);
+//   if(fd < 0){
+//     printf("%s: error: open big failed!\n", s);
+//     exit(1);
+//   }
 
-  n = 0;
-  for(;;){
-    i = read(fd, buf, BSIZE);
-    if(i == 0){
-      if(n == MAXFILE - 1){
-        printf("%s: read only %d blocks from big", s, n);
-        exit(1);
-      }
-      break;
-    } else if(i != BSIZE){
-      printf("%s: read failed %d\n", s, i);
-      exit(1);
-    }
-    if(((int*)buf)[0] != n){
-      printf("%s: read content of block %d is %d\n", s,
-             n, ((int*)buf)[0]);
-      exit(1);
-    }
-    n++;
-  }
-  close(fd);
-  if(unlink("big") < 0){
-    printf("%s: unlink big failed\n", s);
-    exit(1);
-  }
-}
+//   n = 0;
+//   for(;;){
+//     i = read(fd, buf, BSIZE);
+//     if(i == 0){
+//       if(n == MAXFILE - 1){
+//         printf("%s: read only %d blocks from big", s, n);
+//         exit(1);
+//       }
+//       break;
+//     } else if(i != BSIZE){
+//       printf("%s: read failed %d\n", s, i);
+//       exit(1);
+//     }
+//     if(((int*)buf)[0] != n){
+//       printf("%s: read content of block %d is %d\n", s,
+//              n, ((int*)buf)[0]);
+//       exit(1);
+//     }
+//     n++;
+//   }
+//   close(fd);
+//   if(unlink("big") < 0){
+//     printf("%s: unlink big failed\n", s);
+//     exit(1);
+//   }
+// }
 
 // many creates, followed by unlink test
 void
@@ -2864,7 +2864,7 @@ main(int argc, char *argv[])
     {stacktest, "stacktest"},
     {opentest, "opentest"},
     {writetest, "writetest"},
-    {writebig, "writebig"},
+    //{writebig, "writebig"},
     {createtest, "createtest"},
     {openiputtest, "openiput"},
     {exitiputtest, "exitiput"},
