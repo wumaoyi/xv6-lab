@@ -374,6 +374,8 @@ iunlockput(struct inode *ip)
 
 // Return the disk block address of the nth block in inode ip.
 // If there is no such block, bmap allocates one.
+
+// 返回 inode 对应的 blockno
 static uint
 bmap(struct inode *ip, uint bn)
 {
@@ -401,11 +403,43 @@ bmap(struct inode *ip, uint bn)
     return addr;
   }
 
+  bn -= NINDIRECT;
+  //二级间接块
+  if(bn < N_DINDIRECT){
+    int level1_idx = bn / NADDR_PER_BLOCK; // 位于二级间接 块中的位置
+    int level2_idx = bn % NADDR_PER_BLOCK; // 位于一级间接块的位置 最后检索的位置
+
+    // 读出二级间接块
+    if((addr = ip->addrs[NDIRECT + 1]) == 0){
+      //inode不存在就分配
+      ip->addrs[NDIRECT + 1] = addr = balloc(ip->dev);
+    }
+    bp = bread(ip->dev , addr); //addr blockno 返回block内容
+    a = (uint*)bp -> data; // block 的数据
+
+    if((addr = a[level2_idx]) == 0){
+      a[level2_idx] = addr = balloc(ip->dev);
+      // 更改了当前块的内容，标记以供后续写回磁盘
+      log_write(bp);            
+    }
+    brelse(bp);
+
+    bp = bread(ip->dev , addr);
+    a =  (uint*)bp->data;
+    if((addr =  a[level1_idx]) == 0){
+     a[level1_idx] = addr = balloc(ip->dev);
+     log_write(bp);
+    } 
+    brelse(bp);
+    return addr;
+  }
+
   panic("bmap: out of range");
 }
 
 // Truncate inode (discard contents).
 // Caller must hold ip->lock.
+// 释放block
 void
 itrunc(struct inode *ip)
 {
@@ -430,6 +464,29 @@ itrunc(struct inode *ip)
     brelse(bp);
     bfree(ip->dev, ip->addrs[NDIRECT]);
     ip->addrs[NDIRECT] = 0;
+  }
+
+  struct buf *bp1;
+  uint* a1 = 0;//接收blockdata
+
+  if(ip->addrs[NDIRECT + 1]){
+    bp = bread(ip->dev, ip->addrs[NDIRECT+1]);
+    a = (uint*)bp->data;
+    for(i = 0; i < NADDR_PER_BLOCK; ++i){
+      //每个一级间接块操作类似上面 
+      if(a[i]){
+        bp1 = bread(ip -> dev , a[i]);
+        a1 = (uint*)bp1 -> data;
+        for (int j = 0; j < NADDR_PER_BLOCK; ++j){
+          if(a1[j]) bfree(ip->dev , a1[j]);
+        }
+        brelse(bp1);
+        bfree(ip->dev, a[i]);
+      }
+    }
+    brelse(bp);
+    bfree(ip->dev, ip->addrs[NDIRECT+1]);
+    ip->addrs[NDIRECT+1] = 0;
   }
 
   ip->size = 0;
